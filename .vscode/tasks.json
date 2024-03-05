@@ -1,0 +1,205 @@
+{
+    // To launch a task, use the shortcut Ctrl+Shift+B
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Haddock-er: Init",
+            "type": "shell",
+            "command": ".devTools/bin/init",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Haddock-er: Update",
+            "type": "shell",
+            "command": ".devTools/bin/update",
+            "group": "build"
+        },
+        {
+            "label": "Haddock-er: Project Start",
+            "type": "shell",
+            "command": ".devTools/bin/docker_start",
+            "args": [
+                "-v",
+            ],
+            "group": "build"
+        },
+        {
+            "label": "Haddock-er: Project Stop",
+            "type": "shell",
+            "command": ".devTools/bin/docker_stop",
+            "group": "build"
+        },
+        {
+            "label": "Haddock-er: Docker Restart",
+            "type": "shell",
+            "command": ".devTools/bin/docker_stop && .devTools/bin/docker_start -v",
+            // "echoCommand": true,
+            "group": "build"
+        },
+        {
+            "label": "Haddock-er: Docker Run -o",
+            "type": "shell",
+            "command": "./devTools/bin/docker_run",
+            "args": [
+                "-o",
+                "${input:dir}",
+                "${input:cmd}"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Haddock-er: Docker Run -a",
+            "type": "shell",
+            "command": "./devTools/bin/docker_run",
+            "args": [
+                "-a",
+                "${input:dir}",
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Haddock-er: Docker Run -rand",
+            "type": "shell",
+            "command": "./devTools/bin/docker_run",
+            "args": [
+                "-rand",
+                "${input:dir}",
+                "${input:cmd}"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Haddock-er: cache:clear",
+            "type": "shell",
+            "command": ".devTools/bin/docker_run -o . php bin/console cache:clear",
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Haddock-er: Build",
+            "type": "shell",
+            "command": ".devTools/bin/docker_build",
+            "group": "build"
+        },
+        {
+            "label": "Haddock-er: Install Vendors",
+            "type": "shell",
+            "command": ".devTools/bin/docker_install_vendors",
+            "group": "build"
+        },
+        {
+            "label": "Haddock-er: Upgrade",
+            "type": "shell",
+            "command": ".devTools/bin/upgrade",
+            "group": "build"
+        },
+        {
+            "label": "Haddock-er: Docker CF",
+            "type": "shell",
+            "command": ".devTools/bin/docker_cf",
+            "group": "build"
+        },
+        {
+            "label": "Git: Log to screen",
+            "type": "shell",
+            "command": "git log --oneline --name-only --no-merges --author=\"Yassine\" ${input:commitNumber}~.. | awk '/^[a-z0-9]{7} /{print; next} {print \"\\t\"$0}'",
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Git: Log number of commits to screen",
+            "type": "shell",
+            "command": "git log --oneline --name-only --no-merges --author=\"Yassine\" -${input:countNumber} | awk '/^[a-z0-9]{7} /{print; next} {print \"\\t\"$0}'",
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Git: Log to file",
+            "type": "shell",
+            "command": "git log --oneline --name-only --no-merges --author=\"Yassine\" ${input:commitNumber}~.. | awk '/^[a-z0-9]{7} /{print; next} {print \"\\t\\t\"$0}' > .vscode/output-logs-$(date +'%Y%m%d')-$(git rev-parse --abbrev-ref HEAD).txt",
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": "build"
+        },
+        {
+            "label": "Git: Log number of commits to file",
+            "type": "shell",
+            "command": "git log --oneline --name-only --no-merges --author=\"Yassine\" -${input:countNumber}. | awk '/^[a-z0-9]{7} /{print; next} {print \"\\t\\t\"$0}' > .vscode/output-logs-$(date +'%Y%m%d')-$(git rev-parse --abbrev-ref HEAD).txt",
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": "build"
+        },
+        {
+            "label": "Docker: List containers running",
+            "type": "shell",
+            "command": "docker ps -a",
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Docker: Access app-*-php container",
+            "type": "shell",
+            "command": "docker exec -it $(docker ps -qf name=php) /bin/bash", // docker exec -it $(docker ps -a | grep 'php' | awk '{print $1}') /bin/bash
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            }
+        },
+    ],
+    "inputs": [
+        {
+            "id": "dir",
+            "type": "promptString",
+            "description": "Enter the working directory:"
+        },
+        {
+            "id": "cmd",
+            "type": "promptString",
+            "description": "Enter the command to execute:"
+        },
+        {
+            "id": "commitNumber",
+            "type": "promptString",
+            "description": "Enter the start commit number :"
+        },
+        {
+            "id": "countNumber",
+            "type": "promptString",
+            "description": "Enter the number of commits to display :"
+        }
+    ]
+}
